@@ -1,0 +1,6 @@
+// Babel is javascript compiler
+{
+    "presets":[
+        "@babel/preset-env"
+    ]
+}
