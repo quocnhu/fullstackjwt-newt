@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import configViewEngine from './config/viewEngine.js'
 import initWebRoutes from './route/web.js'
 import {poolsql} from '../src/config/db.js'
+import connection from '../src/config/connectDbSequelize.js'
 //Initializing config
 configViewEngine(app);
 
@@ -28,7 +29,7 @@ poolsql.getConnection((err, connection) => {
     console.log("MySQL connected!");
   }
 });
-
+connection()
 const port = process.env.PORT || 1176
 app.listen(port, () => {
   console.log(`>>>SERVER BACKEND JWT IS LISTENING PORT: ${port}`)

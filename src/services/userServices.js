@@ -1,6 +1,6 @@
 //Imported database
 import { poolsql } from "../config/db.js";
-
+import db from '../models/index.js'
 //Encrypting password
 import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
@@ -26,15 +26,20 @@ const createNewUser = async (email, password, username) => {
   try {
     const hashPass = await hashUserPassword(password);
 
-    // Insert user into database using poolsql.query
-    const [results, fields] = await poolsql.execute(
-      `INSERT INTO users (email, password, username) VALUES (?,?,?)`,
-      [email, hashPass, username]
-    );
+    // // Insert user into database using poolsql.query
+    // const [results, fields] = await poolsql.execute(
+    //   `INSERT INTO users (email, password, username) VALUES (?,?,?)`,
+    //   [email, hashPass, username]
+    // );
 
-    // console.log("User created successfully:", results);
-    //   return results.insertId;
-    return results;
+    // // console.log("User created successfully:", results);
+    // //   return results.insertId;
+    // return results;
+    await db.user.create({ 
+      email: email, 
+      password: hashPass,
+      username: username,
+     });
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
