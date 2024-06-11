@@ -18,11 +18,13 @@ const handleDeleteUser = async (req, res) => {
 }
 const getUserUpdatePage = async (req, res) => {
     let {id} = req.params
-    let userUpdateId = await getIdUserUpdate(id)
-    let userUpdateUnique = {}
-    if(userUpdateId && userUpdateId.length > 0){
-        userUpdateUnique = userUpdateId[0]
-    }
+    let  userUpdateUnique = await getIdUserUpdate(id) //userUpdateId
+    // let userUpdateUnique = {}       //just create a new brand
+    //     userUpdateUnique = userUpdateId
+    //     console.log("check>>>>>>>>",userUpdateId)
+    // if(userUpdateId && userUpdateId.length > 0){
+    //     userUpdateUnique = userUpdateId[0]
+    // }
     return res.render('userUpdate.ejs', {userUpdateUnique})
 }
 const handleUpdateUser = async (req, res) => {

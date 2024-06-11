@@ -1,6 +1,6 @@
 //Imported database
 import { poolsql } from "../config/db.js";
-import db from '../models/index.js'
+import db from "../models/index.js";
 //Encrypting password
 import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
@@ -14,9 +14,12 @@ const hashUserPassword = async (userPassword) => {
 //Handling database "CRUD"
 const getUserList = async (email, password, username) => {
   try {
-    const [results, fields] = await poolsql.query(`SELECT * FROM users `);
-    // console.log("SELECTED SUCCESSFULLY:", results);
-    return results;
+    // const [results, fields] = await poolsql.query(`SELECT * FROM users `);
+    // // console.log("SELECTED SUCCESSFULLY:", results);
+    // return results;
+    let users = [];
+    users = await db.user.findAll(); //get all different to findOne
+    return users;
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
@@ -35,11 +38,11 @@ const createNewUser = async (email, password, username) => {
     // // console.log("User created successfully:", results);
     // //   return results.insertId;
     // return results;
-    await db.user.create({ 
-      email: email, 
-      password: hashPass,
+    await db.user.create({
+      email: email,
+      password: hashPass, //sequelize insert db
       username: username,
-     });
+    });
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
@@ -47,11 +50,16 @@ const createNewUser = async (email, password, username) => {
 };
 const deleteUser = async (userId) => {
   try {
-    const [results, fields] = await poolsql.execute(
-      `DELETE FROM users WHERE id = ?`,
-      [userId]
-    );
-    return results;
+    // const [results, fields] = await poolsql.execute(
+    //   `DELETE FROM users WHERE id = ?`,
+    //   [userId]
+    // );
+    // return results;
+    await db.user.destroy({
+      where: {
+        id: userId, //sequelize delete
+      },
+    });
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
@@ -60,11 +68,18 @@ const deleteUser = async (userId) => {
 
 const getIdUserUpdate = async (userId) => {
   try {
-    const [results, fields] = await poolsql.execute(
-      `SELECT * FROM users WHERE id = ?`,
-      [userId]
-    );
-    return results;
+    // const [results, fields] = await poolsql.execute(
+    //   `SELECT * FROM users WHERE id = ?`,
+    //   [userId]
+    // );
+    // return results;
+    let user = {};
+    user = await db.user.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    return user.get({ plain: true }); //change to premitive javascript
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
@@ -73,13 +88,21 @@ const getIdUserUpdate = async (userId) => {
 
 const updateUser = async (id, email, username) => {
   try {
-    const [results, fields] = await poolsql.execute(
-      `UPDATE users
-      SET email = ?, username = ?
-      WHERE id = ?;`,
-      [email, username,id] //remember that put in order
+    // const [results, fields] = await poolsql.execute(
+    //   `UPDATE users
+    //   SET email = ?, username = ?
+    //   WHERE id = ?;`,
+    //   [email, username,id] //remember that put in order
+    // );
+    // return results;
+    await db.user.update(
+      { email: email, username: username },
+      {                             // update by sequelize
+        where: {
+          id:id,
+        },
+      }
     );
-    return results;
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
