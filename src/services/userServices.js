@@ -18,7 +18,7 @@ const getUserList = async (email, password, username) => {
     // // console.log("SELECTED SUCCESSFULLY:", results);
     // return results;
     let users = [];
-    users = await db.user.findAll(); //get all different to findOne
+    users = await db.User.findAll(); //get all different to findOne
     return users;
   } catch (error) {
     console.error("Error creating user:", error);
@@ -38,7 +38,7 @@ const createNewUser = async (email, password, username) => {
     // // console.log("User created successfully:", results);
     // //   return results.insertId;
     // return results;
-    await db.user.create({
+    await db.User.create({  //******remember that  the name User here is the name is declared in user.js******
       email: email,
       password: hashPass, //sequelize insert db
       username: username,
@@ -55,7 +55,8 @@ const deleteUser = async (userId) => {
     //   [userId]
     // );
     // return results;
-    await db.user.destroy({
+    // console.log("hello delete")
+    await db.User.destroy({
       where: {
         id: userId, //sequelize delete
       },
@@ -74,7 +75,7 @@ const getIdUserUpdate = async (userId) => {
     // );
     // return results;
     let user = {};
-    user = await db.user.findOne({
+    user = await db.User.findOne({
       where: {
         id: userId,
       },
@@ -95,7 +96,7 @@ const updateUser = async (id, email, username) => {
     //   [email, username,id] //remember that put in order
     // );
     // return results;
-    await db.user.update(
+    await db.User.update(
       { email: email, username: username },
       {                             // update by sequelize
         where: {
