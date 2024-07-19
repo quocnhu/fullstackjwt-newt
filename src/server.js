@@ -1,13 +1,19 @@
 /**ES6*/ 
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
+// const dotenv = require('dotenv')
+require('dotenv').config()
 import express from 'express';
 const app = express()
 import bodyParser from 'body-parser';
 //External files imported to server backend
 import configViewEngine from './config/viewEngine.js'
 import initWebRoutes from './route/web.js'
+import initApiRoutes from './route/api.js'
+import {configCors} from './config/cors.js'
 import {poolsql} from '../src/config/db.js'
 import connection from '../src/config/connectDbSequelize.js'
+//Initializing CORS
+configCors(app)
 //Initializing config
 configViewEngine(app);
 
@@ -16,10 +22,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Initializing dotenv
-dotenv.config();
+// console.log("check env>>>", process.env)
 
 //Initializing route
 initWebRoutes(app)
+initApiRoutes(app)
 
 //Database connection
 poolsql.getConnection((err, connection) => {

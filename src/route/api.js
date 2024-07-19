@@ -1,19 +1,17 @@
-import {handleCreateNewUser,handleDeleteUser,handleUserPage,getUserUpdatePage,handleUpdateUser} from "../../src/controller/homeController.js";
+import {testApi,handleRegister} from '../controller/apiController.js'
 // import express from 'express';
 import express from 'express';
 const router = express.Router();
 
-const initWebRoutes = (app) => {
-    router.get('/',handleUserPage)
-    router.post('/create-user',handleCreateNewUser)
-    router.post('/delete-user/:id',handleDeleteUser)
-    router.get('/updatePage/:id',getUserUpdatePage)
-    router.post('/handleUpdateUser',handleUpdateUser)
+const initApiRoutes = (app) => {
+    //GRUD
+    router.get("/test-api",testApi)
+    router.post("/register",handleRegister)
 
-    return (app.use('/api/v1', router))
+    return (app.use("/api/v1/", router))
 }
 // export default initWebRoutes;
-export default initWebRoutes;
+export default initApiRoutes;
 
 
 // router-v1
