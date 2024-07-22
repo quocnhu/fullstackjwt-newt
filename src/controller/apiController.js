@@ -1,10 +1,11 @@
-import {registerNewUser} from "../services/loginRegisterService.js"
+import {registerNewUser,handleUserLogin} from "../services/loginRegisterService.js"
 const testApi = (req, res) => {
     return res.status(200).json({
         message: 'ok',
         data:'test api quoc nhu'
     })
 }
+//====Handle register======================
 const handleRegister = async (req,res) => {
    try {
     //======VALIDATE FRONTEND REQUEST =============
@@ -43,4 +44,22 @@ const handleRegister = async (req,res) => {
     })
    }
 }
-export {testApi, handleRegister}
+//======Handle login===========
+const handleLogin = async (req,res) => {
+   try {
+        let data = await handleUserLogin(req.body)
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,   // token
+            DT: data.DT
+        })
+   }catch(error) {
+    return res.status(500).json({
+        EM: 'error from server', //error message
+        EC: '-1', //error code
+        DT:'', //data
+
+    })
+   }
+}
+export {testApi, handleRegister, handleLogin}

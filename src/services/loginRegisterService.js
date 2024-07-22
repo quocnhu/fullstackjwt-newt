@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import { Op } from "sequelize";
 //Encrypting password
 import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
@@ -31,7 +32,8 @@ const checkPhoneExist = async (userPhone) => {
   }
   return false; // Phone does not exist
 };
-//==========HANDLE CRUD==========
+//==========HANDLE R and L==========
+//======handle registration=========
 const registerNewUser = async (rawUserData) => {
   try {
     //check email, phone number are existed
@@ -61,9 +63,9 @@ const registerNewUser = async (rawUserData) => {
     });
     //return success message
     return {
-        EM: "User created successfully",
-        EC: "0",
-    }
+      EM: "User created successfully",
+      EC: "0",
+    };
   } catch (e) {
     console.error("Error creating user>>>>>:", e);
     return {
@@ -72,4 +74,42 @@ const registerNewUser = async (rawUserData) => {
     };
   }
 };
-export { registerNewUser };
+//==========handle login==========
+const checkPassword = (inputPassword, hashPassword) => {
+  return bcrypt.compareSync(inputPassword, hashPassword);
+};
+const handleUserLogin = async (rawData) => {
+  try {
+    let user = await db.User.findOne({
+      where: {
+        [Op.or]: [
+          { email: rawData.valueLogin },
+          { phone: rawData.valueLogin }, // javascript object =>data 'user.get({plain: true})'
+        ],
+      },
+    });
+    if (user) {
+      let isCorrectPassword = checkPassword(rawData.password, user.password);
+      if (isCorrectPassword === true) {
+        return {
+          EM: "Ok",
+          EC: "0",
+          DT: "",
+        };
+      }} 
+     //else
+      return {
+        EM: "something wrong with email/phone number/password ",
+        EC: "1",
+        DT: "",
+      }
+      
+    }catch (e) {
+      console.error("Error creating user>>>>>:", e);
+      return {
+        EM: "Error from server",
+        EC: "-2",
+      };
+    }
+  } 
+export { registerNewUser, handleUserLogin };
